@@ -17,6 +17,9 @@
 #define LED_PONG_PADDING        20
 #define LED_PONG_PADDLE_SPEED   20
 
+static const uint32_t kLEDEdgeCategory   =  0x1 << 0;
+static const uint32_t kLEDPaddleCategory =  0x1 << 1;
+
 @interface LEDMyScene()
 
 @property (nonatomic, strong) SKSpriteNode *playerPaddle;
@@ -32,11 +35,20 @@
 
     if (self = [super initWithSize:size]) {
 
-        self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
         self.backgroundColor = [SKColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
+
+        self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+        self.physicsWorld.gravity = CGVectorMake(0,0);
+        self.physicsBody.categoryBitMask = kLEDEdgeCategory;
 
         self.playerPaddle = [SKSpriteNode spriteNodeWithColor:[NSColor whiteColor] size:LED_PONG_PADDLE_SIZE];
         self.playerPaddle.position = CGPointMake((CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING, CGRectGetMidX(self.frame));
+        self.playerPaddle.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:LED_PONG_PADDLE_SIZE];
+        self.playerPaddle.physicsBody.categoryBitMask = kLEDPaddleCategory;
+        self.playerPaddle.physicsBody.contactTestBitMask = kLEDEdgeCategory;
+        self.playerPaddle.physicsBody.allowsRotation = NO;
+        self.playerPaddle.physicsBody.affectedByGravity = NO;
+
         [self addChild:self.playerPaddle];
     }
 
@@ -49,7 +61,7 @@
     [self handleKeyEvent:keyEvent keyDown:NO];
 }
 
--(void)keyDown:(NSEvent *)keyEvent {
+- (void)keyDown:(NSEvent*)keyEvent {
     [self handleKeyEvent:keyEvent keyDown:YES];
 }
 

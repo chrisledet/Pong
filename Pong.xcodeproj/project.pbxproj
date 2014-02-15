@@ -15,12 +15,15 @@
 		837D7BF918AB151C004E0793 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 837D7BF818AB151C004E0793 /* MainMenu.xib */; };
 		837D7BFB18AB151C004E0793 /* LEDMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 837D7BFA18AB151C004E0793 /* LEDMyScene.m */; };
 		837D7BFE18AB151C004E0793 /* LEDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 837D7BFD18AB151C004E0793 /* LEDAppDelegate.m */; };
-		837D7C0118AB151C004E0793 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 837D7C0018AB151C004E0793 /* Spaceship.png */; };
 		837D7C0318AB151C004E0793 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 837D7C0218AB151C004E0793 /* Images.xcassets */; };
 		837D7C0A18AB151C004E0793 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 837D7C0918AB151C004E0793 /* XCTest.framework */; };
 		837D7C0B18AB151C004E0793 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 837D7BE418AB151C004E0793 /* Cocoa.framework */; };
 		837D7C1318AB151C004E0793 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 837D7C1118AB151C004E0793 /* InfoPlist.strings */; };
 		837D7C1518AB151C004E0793 /* PongTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 837D7C1418AB151C004E0793 /* PongTests.m */; };
+		83CD9F0B18AEF934004DCD3A /* Ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0818AEF934004DCD3A /* Ball.png */; };
+		83CD9F0C18AEF934004DCD3A /* Ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0818AEF934004DCD3A /* Ball.png */; };
+		83CD9F0D18AEF934004DCD3A /* Ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0918AEF934004DCD3A /* Ball@2x.png */; };
+		83CD9F0E18AEF934004DCD3A /* Ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0918AEF934004DCD3A /* Ball@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,13 +53,14 @@
 		837D7BFC18AB151C004E0793 /* LEDMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LEDMyScene.h; sourceTree = "<group>"; };
 		837D7BFD18AB151C004E0793 /* LEDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LEDAppDelegate.m; sourceTree = "<group>"; };
 		837D7BFF18AB151C004E0793 /* LEDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LEDAppDelegate.h; sourceTree = "<group>"; };
-		837D7C0018AB151C004E0793 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		837D7C0218AB151C004E0793 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		837D7C0818AB151C004E0793 /* PongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		837D7C0918AB151C004E0793 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		837D7C1018AB151C004E0793 /* PongTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PongTests-Info.plist"; sourceTree = "<group>"; };
 		837D7C1218AB151C004E0793 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		837D7C1418AB151C004E0793 /* PongTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PongTests.m; sourceTree = "<group>"; };
+		83CD9F0818AEF934004DCD3A /* Ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ball.png; sourceTree = "<group>"; };
+		83CD9F0918AEF934004DCD3A /* Ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Ball@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,12 +128,12 @@
 		837D7BEC18AB151C004E0793 /* Pong */ = {
 			isa = PBXGroup;
 			children = (
+				83CD9F0718AEF934004DCD3A /* Assets */,
 				837D7BF818AB151C004E0793 /* MainMenu.xib */,
 				837D7BFC18AB151C004E0793 /* LEDMyScene.h */,
 				837D7BFA18AB151C004E0793 /* LEDMyScene.m */,
 				837D7BFF18AB151C004E0793 /* LEDAppDelegate.h */,
 				837D7BFD18AB151C004E0793 /* LEDAppDelegate.m */,
-				837D7C0018AB151C004E0793 /* Spaceship.png */,
 				837D7C0218AB151C004E0793 /* Images.xcassets */,
 				837D7BED18AB151C004E0793 /* Supporting Files */,
 			);
@@ -164,6 +168,15 @@
 				837D7C1118AB151C004E0793 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		83CD9F0718AEF934004DCD3A /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				83CD9F0818AEF934004DCD3A /* Ball.png */,
+				83CD9F0918AEF934004DCD3A /* Ball@2x.png */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,9 +255,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				837D7C0118AB151C004E0793 /* Spaceship.png in Resources */,
 				837D7C0318AB151C004E0793 /* Images.xcassets in Resources */,
+				83CD9F0D18AEF934004DCD3A /* Ball@2x.png in Resources */,
 				837D7BF118AB151C004E0793 /* InfoPlist.strings in Resources */,
+				83CD9F0B18AEF934004DCD3A /* Ball.png in Resources */,
 				837D7BF718AB151C004E0793 /* Credits.rtf in Resources */,
 				837D7BF918AB151C004E0793 /* MainMenu.xib in Resources */,
 			);
@@ -254,6 +268,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83CD9F0C18AEF934004DCD3A /* Ball.png in Resources */,
+				83CD9F0E18AEF934004DCD3A /* Ball@2x.png in Resources */,
 				837D7C1318AB151C004E0793 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,6 +408,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pong/Pong-Prefix.pch";
+				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_FILE = "Pong/Pong-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
@@ -406,6 +423,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pong/Pong-Prefix.pch";
+				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_FILE = "Pong/Pong-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
@@ -472,6 +490,7 @@
 				837D7C1A18AB151C004E0793 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		837D7C1B18AB151C004E0793 /* Build configuration list for PBXNativeTarget "PongTests" */ = {
 			isa = XCConfigurationList;
@@ -480,6 +499,7 @@
 				837D7C1D18AB151C004E0793 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

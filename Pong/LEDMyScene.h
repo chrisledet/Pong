@@ -8,6 +8,6 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface LEDMyScene : SKScene
+@interface LEDMyScene : SKScene <SKPhysicsContactDelegate>
 
 @end

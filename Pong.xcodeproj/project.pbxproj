@@ -24,6 +24,8 @@
 		83CD9F0C18AEF934004DCD3A /* Ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0818AEF934004DCD3A /* Ball.png */; };
 		83CD9F0D18AEF934004DCD3A /* Ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0918AEF934004DCD3A /* Ball@2x.png */; };
 		83CD9F0E18AEF934004DCD3A /* Ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0918AEF934004DCD3A /* Ball@2x.png */; };
+		83CD9F1418AFDDF7004DCD3A /* LEDPaddle.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CD9F1318AFDDF7004DCD3A /* LEDPaddle.m */; };
+		83CD9F1518AFDDF7004DCD3A /* LEDPaddle.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CD9F1318AFDDF7004DCD3A /* LEDPaddle.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,9 @@
 		837D7C1418AB151C004E0793 /* PongTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PongTests.m; sourceTree = "<group>"; };
 		83CD9F0818AEF934004DCD3A /* Ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ball.png; sourceTree = "<group>"; };
 		83CD9F0918AEF934004DCD3A /* Ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Ball@2x.png"; sourceTree = "<group>"; };
+		83CD9F1218AFDDF7004DCD3A /* LEDPaddle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LEDPaddle.h; path = Classes/LEDPaddle.h; sourceTree = "<group>"; };
+		83CD9F1318AFDDF7004DCD3A /* LEDPaddle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LEDPaddle.m; path = Classes/LEDPaddle.m; sourceTree = "<group>"; };
+		83CD9F1618AFDE66004DCD3A /* LEDMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEDMacros.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +133,7 @@
 		837D7BEC18AB151C004E0793 /* Pong */ = {
 			isa = PBXGroup;
 			children = (
+				83CD9F1118AFDDD6004DCD3A /* Classes */,
 				83CD9F0718AEF934004DCD3A /* Assets */,
 				837D7BF818AB151C004E0793 /* MainMenu.xib */,
 				837D7BFC18AB151C004E0793 /* LEDMyScene.h */,
@@ -177,6 +183,16 @@
 				83CD9F0918AEF934004DCD3A /* Ball@2x.png */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		83CD9F1118AFDDD6004DCD3A /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				83CD9F1618AFDE66004DCD3A /* LEDMacros.h */,
+				83CD9F1218AFDDF7004DCD3A /* LEDPaddle.h */,
+				83CD9F1318AFDDF7004DCD3A /* LEDPaddle.m */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -282,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				837D7BFE18AB151C004E0793 /* LEDAppDelegate.m in Sources */,
+				83CD9F1418AFDDF7004DCD3A /* LEDPaddle.m in Sources */,
 				837D7BFB18AB151C004E0793 /* LEDMyScene.m in Sources */,
 				837D7BF318AB151C004E0793 /* main.m in Sources */,
 			);
@@ -292,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				837D7C1518AB151C004E0793 /* PongTests.m in Sources */,
+				83CD9F1518AFDDF7004DCD3A /* LEDPaddle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

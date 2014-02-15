@@ -8,23 +8,9 @@
 
 #import "LEDMyScene.h"
 
-#define LED_PONG_MOVE_UP        13  // W
-#define LED_PONG_MOVE_UP_ALT    126 // Arrow Up
-#define LED_PONG_MOVE_DOWN      1   // S
-#define LED_PONG_MOVE_DOWN_ALT  125 // Arrow Down
-
-#define LED_PONG_PADDLE_SIZE    CGSizeMake(35, 150)
-#define LED_PONG_PADDING        20
-#define LED_PONG_PADDLE_SPEED   20
-
-#define LED_PONG_BALL_SPEED     5.0f
-
-static const uint32_t kLEDEdgeCategory   =  0x1 << 0;
-static const uint32_t kLEDPaddleCategory =  0x1 << 1;
-static const uint32_t kLEDBallCategory   =  0x1 << 2;
-
 @interface LEDMyScene()
 
+@property (nonatomic, strong) SKSpriteNode *cpuPaddle;
 @property (nonatomic, strong) SKSpriteNode *playerPaddle;
 @property (nonatomic, strong) SKSpriteNode *ball;
 
@@ -34,7 +20,6 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 @property (nonatomic, assign) BOOL gameStarted;
 @property (nonatomic, assign) BOOL moveUp;
 @property (nonatomic, assign) BOOL moveDown;
-
 @property (nonatomic, assign) BOOL bounceUp;
 @property (nonatomic, assign) BOOL bounceLeft;
 
@@ -43,9 +28,13 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 
 @property (nonatomic, assign) CGFloat ballVelocityX;
 @property (nonatomic, assign) CGFloat ballVelocityY;
+@property (nonatomic, assign) CGFloat cpuPaddleVelocityY;
+@property (nonatomic, assign) CGFloat initialPlayerPositionX;
+@property (nonatomic, assign) CGFloat initialCpuPositionX;
 
 @property (nonatomic, assign) NSUInteger playerScore;
 @property (nonatomic, assign) NSUInteger cpuScore;
+
 
 @end
 
@@ -57,7 +46,7 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 
     if (self = [super initWithSize:size]) {
 
-        self.backgroundColor = [SKColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
+        self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
         self.physicsWorld.contactDelegate = self;
 
         self.playerScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
@@ -75,15 +64,13 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
         self.physicsBody.categoryBitMask = kLEDEdgeCategory;
         self.physicsBody.friction = 0.0;
 
-        self.playerPaddle = [SKSpriteNode spriteNodeWithColor:[NSColor whiteColor] size:LED_PONG_PADDLE_SIZE];
-        self.playerPaddle.position = CGPointMake((CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING, CGRectGetMidX(self.frame));
-        self.playerPaddle.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:LED_PONG_PADDLE_SIZE];
-        self.playerPaddle.physicsBody.categoryBitMask = kLEDPaddleCategory;
-        self.playerPaddle.physicsBody.contactTestBitMask = kLEDEdgeCategory | kLEDBallCategory;
-        self.playerPaddle.physicsBody.allowsRotation = NO;
-        self.playerPaddle.physicsBody.friction = 0.0;
-        self.playerPaddle.physicsBody.mass = 0.0;
+        self.initialPlayerPositionX = (CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING;
+        self.playerPaddle = [[LEDPaddle alloc] initWithColor:[SKColor whiteColor] size:LED_PONG_PADDLE_SIZE];
         [self addChild:self.playerPaddle];
+
+        self.initialCpuPositionX = (CGRectGetMinX(self.frame) + LED_PONG_PADDLE_SIZE.width/2) + LED_PONG_PADDING;
+        self.cpuPaddle = [[LEDPaddle alloc] initWithColor:[SKColor whiteColor] size:LED_PONG_PADDLE_SIZE];
+        [self addChild:self.cpuPaddle];
 
         self.ball = [SKSpriteNode spriteNodeWithImageNamed:@"Ball"];
         self.ball.color = [SKColor whiteColor];
@@ -134,6 +121,9 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     self.playerScore = 0;
     self.cpuScore = 0;
 
+    self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, CGRectGetMidY(self.frame));
+    self.cpuPaddle.position = CGPointMake(self.initialCpuPositionX, CGRectGetMidY(self.frame));
+
     [self resetPositions];
 }
 
@@ -155,7 +145,8 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 
     // FIXME:
     // Can't figure how to keep the ball from moving the paddle on collison
-    self.playerPaddle.position = CGPointMake((CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING, self.playerPaddle.position.y);
+    self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, self.playerPaddle.position.y);
+    self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX,    self.cpuPaddle.position.y);
 
     // Move Paddle
     if (self.moveUp) {
@@ -164,6 +155,15 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     } else if (self.moveDown) {
         CGPoint currentPosition = self.playerPaddle.position;
         self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y - LED_PONG_PADDLE_SPEED);
+    }
+
+    // Check if CPU Paddle needs to move
+    if (CGRectGetMidX(self.frame) > self.ballVelocityX) {
+        if (self.bounceUp) {
+            self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.cpuPaddle.position.y + LED_PONG_BALL_SPEED);
+        } else {
+            self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.cpuPaddle.position.y - LED_PONG_BALL_SPEED);
+        }
     }
 
     // Ball's Next Movement

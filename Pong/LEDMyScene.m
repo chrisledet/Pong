@@ -28,6 +28,9 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 @property (nonatomic, strong) SKSpriteNode *playerPaddle;
 @property (nonatomic, strong) SKSpriteNode *ball;
 
+@property (nonatomic, strong) SKLabelNode *playerScoreLabel;
+@property (nonatomic, strong) SKLabelNode *cpuScoreLabel;
+
 @property (nonatomic, assign) BOOL gameStarted;
 @property (nonatomic, assign) BOOL moveUp;
 @property (nonatomic, assign) BOOL moveDown;
@@ -41,9 +44,14 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 @property (nonatomic, assign) CGFloat ballVelocityX;
 @property (nonatomic, assign) CGFloat ballVelocityY;
 
+@property (nonatomic, assign) NSUInteger playerScore;
+@property (nonatomic, assign) NSUInteger cpuScore;
+
 @end
 
 @implementation LEDMyScene
+
+#pragma mark - Initializers
 
 - (id)initWithSize:(CGSize)size {
 
@@ -51,6 +59,16 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
 
         self.backgroundColor = [SKColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
         self.physicsWorld.contactDelegate = self;
+
+        self.playerScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
+        self.playerScoreLabel.fontSize = 35.0f;
+        self.playerScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) + 100, CGRectGetMaxY(self.frame) - 75);
+        [self addChild:self.playerScoreLabel];
+
+        self.cpuScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
+        self.cpuScoreLabel.fontSize = 35.0f;
+        self.cpuScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) - 100, CGRectGetMaxY(self.frame) - 75);
+        [self addChild:self.cpuScoreLabel];
 
         self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
         self.physicsWorld.gravity = CGVectorMake(0,0);
@@ -61,10 +79,10 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
         self.playerPaddle.position = CGPointMake((CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING, CGRectGetMidX(self.frame));
         self.playerPaddle.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:LED_PONG_PADDLE_SIZE];
         self.playerPaddle.physicsBody.categoryBitMask = kLEDPaddleCategory;
-        self.playerPaddle.physicsBody.contactTestBitMask = kLEDEdgeCategory;
+        self.playerPaddle.physicsBody.contactTestBitMask = kLEDEdgeCategory | kLEDBallCategory;
         self.playerPaddle.physicsBody.allowsRotation = NO;
-        self.playerPaddle.physicsBody.affectedByGravity = NO;
         self.playerPaddle.physicsBody.friction = 0.0;
+        self.playerPaddle.physicsBody.mass = 0.0;
         [self addChild:self.playerPaddle];
 
         self.ball = [SKSpriteNode spriteNodeWithImageNamed:@"Ball"];
@@ -73,6 +91,8 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
         self.ball.physicsBody.categoryBitMask = kLEDBallCategory;
         self.ball.physicsBody.contactTestBitMask = kLEDEdgeCategory | kLEDPaddleCategory;
         self.ball.physicsBody.friction = 0.0;
+        self.ball.physicsBody.mass = 0.0;
+        self.ball.physicsBody.velocity = CGVectorMake(0, 0);
         [self addChild:self.ball];
 
         self.gameStarted = NO;
@@ -106,9 +126,18 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     self.gameStarted = NO;
 }
 
+#pragma mark - Game Events
+
 - (void)startGame {
     self.gameStarted = YES;
 
+    self.playerScore = 0;
+    self.cpuScore = 0;
+
+    [self resetPositions];
+}
+
+- (void)resetPositions {
     self.ballVelocityX = CGRectGetMidX(self.frame);
     self.ballVelocityY = CGRectGetMidY(self.frame);
 
@@ -124,6 +153,11 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     if (!self.gameStarted)
         [self startGame];
 
+    // FIXME:
+    // Can't figure how to keep the ball from moving the paddle on collison
+    self.playerPaddle.position = CGPointMake((CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING, self.playerPaddle.position.y);
+
+    // Move Paddle
     if (self.moveUp) {
         CGPoint currentPosition = self.playerPaddle.position;
         self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y + LED_PONG_PADDLE_SPEED);
@@ -132,10 +166,7 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
         self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y - LED_PONG_PADDLE_SPEED);
     }
 
-    NSLog(@"Moving Ball to (%0.2f, %0.2f)", self.ballVelocityX, self.ballVelocityY);
-    self.ball.position = CGPointMake(self.ballVelocityX, self.ballVelocityY);
-
-    // Update position
+    // Ball's Next Movement
     if (self.ballVelocityY >= self.frame.size.height - self.ball.size.height/2) {
         self.bounceUp = NO;
     } else if (self.ballVelocityY <= self.ball.size.height/2) {
@@ -143,11 +174,12 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     }
 
     if (self.ballVelocityX >= self.frame.size.width - self.ball.size.width/2) {
-        self.bounceLeft = YES;
+        self.cpuScore++;
+        [self resetPositions];
     } else if (self.ballVelocityX < self.ball.size.width/2) {
-        self.bounceLeft = NO;
+        self.playerScore++;
+        [self resetPositions];
     }
-
 
     if (self.bounceUp) {
         self.ballVelocityY += LED_PONG_BALL_SPEED;
@@ -160,7 +192,12 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     } else {
         self.ballVelocityX += LED_PONG_BALL_SPEED;
     }
+
+    // Move Ball
+    self.ball.position = CGPointMake(self.ballVelocityX, self.ballVelocityY);
 }
+
+#pragma mark - SKPhysicsContactDelegate Methods
 
 - (void)didBeginContact:(SKPhysicsContact*)contact {
 
@@ -168,8 +205,21 @@ static const uint32_t kLEDBallCategory   =  0x1 << 2;
     BOOL paddleTouched = (contact.bodyA.categoryBitMask == kLEDPaddleCategory || contact.bodyB.categoryBitMask == kLEDPaddleCategory);
 
     if (ballTouched && paddleTouched) {
-        CGPoint p = CGPointMake(self.currentLocation.x, -self.currentLocation.y);
+        self.bounceLeft = !self.bounceLeft;
+        self.bounceUp = !self.bounceUp;
     }
+}
+
+#pragma mark - Properties
+
+- (void)setPlayerScore:(NSUInteger)playerScore {
+    _playerScore = playerScore;
+    self.playerScoreLabel.text = [NSString stringWithFormat:@"%lu", _playerScore];
+}
+
+- (void)setCpuScore:(NSUInteger)cpuScore {
+    _cpuScore = cpuScore;
+    self.cpuScoreLabel.text = [NSString stringWithFormat:@"%lu", _cpuScore];
 }
 
 @end

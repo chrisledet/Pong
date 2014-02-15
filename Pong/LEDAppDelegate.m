@@ -9,6 +9,12 @@
 #import "LEDAppDelegate.h"
 #import "LEDMyScene.h"
 
+@interface LEDAppDelegate()
+
+@property (nonatomic, strong) LEDMyScene *currentScene;
+
+@end
+
 @implementation LEDAppDelegate
 
 @synthesize window = _window;
@@ -16,12 +22,12 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     /* Pick a size for the scene */
-    SKScene *scene = [LEDMyScene sceneWithSize:CGSizeMake(1024, 768)];
+    self.currentScene = [LEDMyScene sceneWithSize:CGSizeMake(1024, 768)];
 
     /* Set the scale mode to scale to fit the window */
-    scene.scaleMode = SKSceneScaleModeAspectFit;
+    self.currentScene.scaleMode = SKSceneScaleModeAspectFit;
 
-    [self.skView presentScene:scene];
+    [self.skView presentScene:self.currentScene];
 
     self.skView.showsFPS = YES;
     self.skView.showsNodeCount = YES;
@@ -29,6 +35,14 @@
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
     return YES;
+}
+
+- (void)applicationWillResignActive:(NSNotification*)notification {
+    [self.currentScene pauseGame];
+}
+
+- (void)applicationWillBecomeActive:(NSNotification*)notification {
+    [self.currentScene unpauseGame];
 }
 
 @end

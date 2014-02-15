@@ -12,4 +12,7 @@
 
 @interface LEDMyScene : SKScene <SKPhysicsContactDelegate>
 
+- (void)pauseGame;
+- (void)unpauseGame;
+
 @end

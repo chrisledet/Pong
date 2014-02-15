@@ -17,6 +17,7 @@
 @property (nonatomic, strong) SKLabelNode *playerScoreLabel;
 @property (nonatomic, strong) SKLabelNode *cpuScoreLabel;
 
+@property (nonatomic, assign) BOOL gamePaused;
 @property (nonatomic, assign) BOOL gameStarted;
 @property (nonatomic, assign) BOOL moveUp;
 @property (nonatomic, assign) BOOL moveDown;
@@ -90,6 +91,7 @@
         [self addChild:self.ball];
 
         self.gameStarted = NO;
+        self.gamePaused = NO;
     }
 
     return self;
@@ -118,6 +120,18 @@
 - (void)mouseDown:(NSEvent*)theEvent {
     NSLog(@"Mouse Restart Turned On!");
     self.gameStarted = NO;
+}
+
+- (void)pauseGame {
+    self.gamePaused = YES;
+}
+
+- (void)unpauseGame {
+    self.gamePaused = NO;
+}
+
+- (void)togglePause {
+    self.gamePaused = !self.gamePaused;
 }
 
 #pragma mark - Game Events
@@ -161,6 +175,9 @@
 
     if (!self.gameStarted)
         [self startGame];
+
+    if (self.gamePaused)
+        return;
 
     // NOTICE: Just reset paddle's position.x when it collides with ball
     self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, self.playerPaddle.position.y);

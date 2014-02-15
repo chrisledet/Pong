@@ -31,6 +31,7 @@
 @property (nonatomic, assign) CGFloat cpuPaddleVelocityY;
 @property (nonatomic, assign) CGFloat initialPlayerPositionX;
 @property (nonatomic, assign) CGFloat initialCpuPositionX;
+@property (nonatomic, assign) CGFloat ballVelocityModifier;
 
 @property (nonatomic, assign) NSUInteger playerScore;
 @property (nonatomic, assign) NSUInteger cpuScore;
@@ -49,14 +50,20 @@
         self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
         self.physicsWorld.contactDelegate = self;
 
+        SKLabelNode *scoreTitleLabel = [[SKLabelNode alloc] initWithFontNamed:@"Helvetica"];
+        scoreTitleLabel.fontSize = 35.0f;
+        scoreTitleLabel.text = @"Score";
+        scoreTitleLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame) - 40);
+        [self addChild:scoreTitleLabel];
+
         self.playerScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
         self.playerScoreLabel.fontSize = 35.0f;
-        self.playerScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) + 100, CGRectGetMaxY(self.frame) - 75);
+        self.playerScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) + 50, CGRectGetMaxY(self.frame) - 85);
         [self addChild:self.playerScoreLabel];
 
         self.cpuScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
         self.cpuScoreLabel.fontSize = 35.0f;
-        self.cpuScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) - 100, CGRectGetMaxY(self.frame) - 75);
+        self.cpuScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) - 50, CGRectGetMaxY(self.frame) - 85);
         [self addChild:self.cpuScoreLabel];
 
         self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
@@ -115,11 +122,14 @@
 
 #pragma mark - Game Events
 
+/// Starts game, resets scores, etc
 - (void)startGame {
     self.gameStarted = YES;
 
     self.playerScore = 0;
     self.cpuScore = 0;
+
+    self.ballVelocityModifier = tanf([self randomAngle]);
 
     self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, CGRectGetMidY(self.frame));
     self.cpuPaddle.position = CGPointMake(self.initialCpuPositionX, CGRectGetMidY(self.frame));
@@ -127,12 +137,21 @@
     [self resetPositions];
 }
 
+/// Starts the ball from mid and moves in a random direction
 - (void)resetPositions {
     self.ballVelocityX = CGRectGetMidX(self.frame);
     self.ballVelocityY = CGRectGetMidY(self.frame);
 
     self.bounceUp   = (arc4random_uniform(2) + 1) % 2 == 0;
     self.bounceLeft = (arc4random_uniform(2) + 1) % 2 == 0;
+}
+
+#pragma mark - Utilities
+
+/// Return a random angle in radians
+- (CGFloat)randomAngle {
+    CGFloat angleInDegrees = 45 - (arc4random_uniform(25) + 1);
+    return angleInDegrees * M_PI / 180;
 }
 
 #pragma mark - Update Frame
@@ -143,8 +162,7 @@
     if (!self.gameStarted)
         [self startGame];
 
-    // FIXME:
-    // Can't figure how to keep the ball from moving the paddle on collison
+    // NOTICE: Just reset paddle's position.x when it collides with ball
     self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, self.playerPaddle.position.y);
     self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX,    self.cpuPaddle.position.y);
 
@@ -157,7 +175,7 @@
         self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y - LED_PONG_PADDLE_SPEED);
     }
 
-    // Check if CPU Paddle needs to move
+    // Check if CPU's Paddle needs to move
     if (CGRectGetMidX(self.frame) > self.ballVelocityX) {
         if (self.bounceUp) {
             self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.cpuPaddle.position.y + LED_PONG_BALL_SPEED);
@@ -166,14 +184,15 @@
         }
     }
 
-    // Ball's Next Movement
+    // Ball's next movement when it hits top or bottom
     if (self.ballVelocityY >= self.frame.size.height - self.ball.size.height/2) {
         self.bounceUp = NO;
     } else if (self.ballVelocityY <= self.ball.size.height/2) {
         self.bounceUp = YES;
     }
 
-    if (self.ballVelocityX >= self.frame.size.width - self.ball.size.width/2) {
+    // When ball touches the sides
+    if (self.ballVelocityX >= self.frame.size.width + self.ball.size.width/2) {
         self.cpuScore++;
         [self resetPositions];
     } else if (self.ballVelocityX < self.ball.size.width/2) {
@@ -181,16 +200,20 @@
         [self resetPositions];
     }
 
+    // Calculate the speed and angle of the ball's direction
+    float currentBallVelocity = LED_PONG_BALL_SPEED * self.ballVelocityModifier;
+    float speedDifference = LED_PONG_BALL_SPEED - currentBallVelocity;
+
     if (self.bounceUp) {
-        self.ballVelocityY += LED_PONG_BALL_SPEED;
+        self.ballVelocityY += currentBallVelocity;
     } else {
-        self.ballVelocityY -= LED_PONG_BALL_SPEED;
+        self.ballVelocityY -= currentBallVelocity;
     }
 
     if (self.bounceLeft) {
-        self.ballVelocityX -= LED_PONG_BALL_SPEED;
+        self.ballVelocityX -= LED_PONG_BALL_SPEED + speedDifference;
     } else {
-        self.ballVelocityX += LED_PONG_BALL_SPEED;
+        self.ballVelocityX += LED_PONG_BALL_SPEED + speedDifference;
     }
 
     // Move Ball
@@ -206,7 +229,7 @@
 
     if (ballTouched && paddleTouched) {
         self.bounceLeft = !self.bounceLeft;
-        self.bounceUp = !self.bounceUp;
+        self.ballVelocityModifier = tanf([self randomAngle]);
     }
 }
 

@@ -16,6 +16,10 @@
 
 @property (nonatomic, strong) SKLabelNode *playerScoreLabel;
 @property (nonatomic, strong) SKLabelNode *cpuScoreLabel;
+@property (nonatomic, strong) SKLabelNode *pauseLabel;
+
+@property (nonatomic, strong) SKAction *fadeOutAction;
+@property (nonatomic, strong) SKAction *fadeInAction;
 
 @property (nonatomic, assign) BOOL gamePaused;
 @property (nonatomic, assign) BOOL gameStarted;
@@ -49,6 +53,9 @@
 
         self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
         self.physicsWorld.contactDelegate = self;
+
+        self.fadeOutAction = [SKAction fadeOutWithDuration:0.75f];
+        self.fadeInAction  = [SKAction fadeInWithDuration:0.75f];
 
         SKLabelNode *scoreTitleLabel = [[SKLabelNode alloc] initWithFontNamed:@"Helvetica"];
         scoreTitleLabel.fontSize = 35.0f;
@@ -89,6 +96,12 @@
         self.ball.physicsBody.velocity = CGVectorMake(0, 0);
         [self addChild:self.ball];
 
+        self.pauseLabel = [[SKLabelNode alloc] initWithFontNamed:@"Helvetica"];
+        self.pauseLabel.fontSize = 70.0f;
+        self.pauseLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+        self.pauseLabel.text = nil;
+        [self addChild:self.pauseLabel];
+
         self.gameStarted = NO;
         self.gamePaused = NO;
     }
@@ -103,6 +116,11 @@
 }
 
 - (void)keyDown:(NSEvent*)keyEvent {
+
+    if ([keyEvent keyCode] == LED_PONG_MOVE_SPACEBAR) {
+        [self togglePause];
+    }
+
     [self handleKeyEvent:keyEvent keyDown:YES];
 }
 
@@ -110,8 +128,7 @@
 
     if ([keyEvent keyCode] == LED_PONG_MOVE_UP || [keyEvent keyCode] == LED_PONG_MOVE_UP_ALT) {
         self.moveUp = isKeyDown;
-    }
-    else if ([keyEvent keyCode] == LED_PONG_MOVE_DOWN || [keyEvent keyCode] == LED_PONG_MOVE_DOWN_ALT) {
+    } else if ([keyEvent keyCode] == LED_PONG_MOVE_DOWN || [keyEvent keyCode] == LED_PONG_MOVE_DOWN_ALT) {
         self.moveDown = isKeyDown;
     }
 }
@@ -151,14 +168,24 @@
 
 - (void)pauseGame {
     self.gamePaused = YES;
+
+    if (!self.pauseLabel.text) {
+        self.pauseLabel.text = @"Paused";
+    }
+
+    [self.pauseLabel runAction:self.fadeInAction];
 }
 
 - (void)unpauseGame {
     self.gamePaused = NO;
+    [self.pauseLabel runAction:self.fadeOutAction];
 }
 
 - (void)togglePause {
-    self.gamePaused = !self.gamePaused;
+    if (self.gamePaused)
+        [self unpauseGame];
+    else
+        [self pauseGame];
 }
 
 #pragma mark - Utilities

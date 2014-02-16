@@ -10,6 +10,7 @@
 #define LED_PONG_MOVE_UP_ALT    126 // Arrow Up
 #define LED_PONG_MOVE_DOWN      1   // S
 #define LED_PONG_MOVE_DOWN_ALT  125 // Arrow Down
+#define LED_PONG_MOVE_SPACEBAR  49  // Spacebar
 
 #define LED_PONG_PADDLE_SIZE    CGSizeMake(35, 150)
 #define LED_PONG_PADDING        20

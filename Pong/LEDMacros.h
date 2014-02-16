@@ -14,8 +14,9 @@
 #define LED_PONG_PADDLE_SIZE    CGSizeMake(35, 150)
 #define LED_PONG_PADDING        20
 #define LED_PONG_PADDLE_SPEED   20
+#define LED_PONG_CPU_THROTTLE   0.845f
 
-#define LED_PONG_BALL_SPEED     5.0f
+#define LED_PONG_BALL_SPEED     7.5f
 
 static const uint32_t kLEDEdgeCategory   =  0x1 << 0;
 static const uint32_t kLEDPaddleCategory =  0x1 << 1;

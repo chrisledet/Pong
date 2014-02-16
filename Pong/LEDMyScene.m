@@ -37,7 +37,6 @@
 @property (nonatomic, assign) NSUInteger playerScore;
 @property (nonatomic, assign) NSUInteger cpuScore;
 
-
 @end
 
 @implementation LEDMyScene
@@ -117,22 +116,12 @@
     }
 }
 
+#if DEBUG
 - (void)mouseDown:(NSEvent*)theEvent {
     NSLog(@"Mouse Restart Turned On!");
     self.gameStarted = NO;
 }
-
-- (void)pauseGame {
-    self.gamePaused = YES;
-}
-
-- (void)unpauseGame {
-    self.gamePaused = NO;
-}
-
-- (void)togglePause {
-    self.gamePaused = !self.gamePaused;
-}
+#endif
 
 #pragma mark - Game Events
 
@@ -160,11 +149,23 @@
     self.bounceLeft = (arc4random_uniform(2) + 1) % 2 == 0;
 }
 
+- (void)pauseGame {
+    self.gamePaused = YES;
+}
+
+- (void)unpauseGame {
+    self.gamePaused = NO;
+}
+
+- (void)togglePause {
+    self.gamePaused = !self.gamePaused;
+}
+
 #pragma mark - Utilities
 
 /// Return a random angle in radians
 - (CGFloat)randomAngle {
-    CGFloat angleInDegrees = 45 - (arc4random_uniform(25) + 1);
+    CGFloat angleInDegrees = 45 - (arc4random_uniform(35) + 1);
     return angleInDegrees * M_PI / 180;
 }
 
@@ -192,14 +193,8 @@
         self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y - LED_PONG_PADDLE_SPEED);
     }
 
-    // Check if CPU's Paddle needs to move
-    if (CGRectGetMidX(self.frame) > self.ballVelocityX) {
-        if (self.bounceUp) {
-            self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.cpuPaddle.position.y + LED_PONG_BALL_SPEED);
-        } else {
-            self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.cpuPaddle.position.y - LED_PONG_BALL_SPEED);
-        }
-    }
+    // Move CPU Paddle
+    self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.ballVelocityY * LED_PONG_CPU_THROTTLE);
 
     // Ball's next movement when it hits top or bottom
     if (self.ballVelocityY >= self.frame.size.height - self.ball.size.height/2) {
@@ -228,9 +223,9 @@
     }
 
     if (self.bounceLeft) {
-        self.ballVelocityX -= LED_PONG_BALL_SPEED + speedDifference;
+        self.ballVelocityX -= (LED_PONG_BALL_SPEED + speedDifference);
     } else {
-        self.ballVelocityX += LED_PONG_BALL_SPEED + speedDifference;
+        self.ballVelocityX += (LED_PONG_BALL_SPEED + speedDifference);
     }
 
     // Move Ball
@@ -245,6 +240,14 @@
     BOOL paddleTouched = (contact.bodyA.categoryBitMask == kLEDPaddleCategory || contact.bodyB.categoryBitMask == kLEDPaddleCategory);
 
     if (ballTouched && paddleTouched) {
+
+        // Apply some force
+        if (self.moveUp) {
+            self.bounceUp = YES;
+        } else if (self.moveDown) {
+            self.bounceUp = NO;
+        }
+
         self.bounceLeft = !self.bounceLeft;
         self.ballVelocityModifier = tanf([self randomAngle]);
     }

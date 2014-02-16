@@ -57,20 +57,14 @@
         self.fadeOutAction = [SKAction fadeOutWithDuration:0.75f];
         self.fadeInAction  = [SKAction fadeInWithDuration:0.75f];
 
-        SKLabelNode *scoreTitleLabel = [[SKLabelNode alloc] initWithFontNamed:@"Helvetica"];
-        scoreTitleLabel.fontSize = 35.0f;
-        scoreTitleLabel.text = @"Score";
-        scoreTitleLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame) - 40);
-        [self addChild:scoreTitleLabel];
-
         self.playerScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
-        self.playerScoreLabel.fontSize = 35.0f;
-        self.playerScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) + 50, CGRectGetMaxY(self.frame) - 85);
+        self.playerScoreLabel.fontSize = 45.0f;
+        self.playerScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) + 100, CGRectGetMaxY(self.frame) - 85);
         [self addChild:self.playerScoreLabel];
 
         self.cpuScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
-        self.cpuScoreLabel.fontSize = 35.0f;
-        self.cpuScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) - 50, CGRectGetMaxY(self.frame) - 85);
+        self.cpuScoreLabel.fontSize = 45.0f;
+        self.cpuScoreLabel.position = CGPointMake(CGRectGetMidX(self.frame) - 100, CGRectGetMaxY(self.frame) - 85);
         [self addChild:self.cpuScoreLabel];
 
         self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];

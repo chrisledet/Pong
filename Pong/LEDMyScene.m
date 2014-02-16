@@ -40,6 +40,7 @@
 
 @property (nonatomic, assign) NSUInteger playerScore;
 @property (nonatomic, assign) NSUInteger cpuScore;
+@property (nonatomic, assign) NSUInteger hitCounter;
 
 @end
 
@@ -142,11 +143,12 @@
 
     self.playerScore = 0;
     self.cpuScore = 0;
+    self.hitCounter = 0;
 
     self.ballVelocityModifier = tanf([self randomAngle]);
 
     self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, CGRectGetMidY(self.frame));
-    self.cpuPaddle.position = CGPointMake(self.initialCpuPositionX, CGRectGetMidY(self.frame));
+    self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX, CGRectGetMidY(self.frame));
 
     [self resetPositions];
 }
@@ -158,6 +160,8 @@
 
     self.bounceUp   = (arc4random_uniform(2) + 1) % 2 == 0;
     self.bounceLeft = (arc4random_uniform(2) + 1) % 2 == 0;
+
+    self.hitCounter = 0;
 }
 
 - (void)pauseGame {
@@ -203,7 +207,9 @@
 
     // NOTICE: Just reset paddle's position.x when it collides with ball
     self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, self.playerPaddle.position.y);
-    self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX,    self.cpuPaddle.position.y);
+    self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX, self.cpuPaddle.position.y);
+
+    float speedBoost = (self.hitCounter * 0.20);
 
     // Move Paddle
     if (self.moveUp) {
@@ -215,7 +221,7 @@
     }
 
     // Move CPU Paddle
-    self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.ballVelocityY * LED_PONG_CPU_THROTTLE);
+    self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.ballVelocityY * LED_PONG_CPU_THROTTLE + speedBoost);
 
     // Ball's next movement when it hits top or bottom
     if (self.ballVelocityY >= self.frame.size.height - self.ball.size.height/2) {
@@ -234,8 +240,8 @@
     }
 
     // Calculate the speed and angle of the ball's direction
-    float currentBallVelocity = LED_PONG_BALL_SPEED * self.ballVelocityModifier;
-    float speedDifference = LED_PONG_BALL_SPEED - currentBallVelocity;
+    float currentBallVelocity = (LED_PONG_BALL_SPEED * self.ballVelocityModifier) + speedBoost;
+    float speedDifference = (LED_PONG_BALL_SPEED - currentBallVelocity) + speedBoost;
 
     if (self.bounceUp) {
         self.ballVelocityY += currentBallVelocity;
@@ -261,6 +267,8 @@
     BOOL paddleTouched = (contact.bodyA.categoryBitMask == kLEDPaddleCategory || contact.bodyB.categoryBitMask == kLEDPaddleCategory);
 
     if (ballTouched && paddleTouched) {
+
+        ++self.hitCounter;
 
         // Apply some force
         if (self.moveUp) {

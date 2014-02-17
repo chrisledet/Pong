@@ -28,9 +28,6 @@
     self.currentScene.scaleMode = SKSceneScaleModeAspectFit;
 
     [self.skView presentScene:self.currentScene];
-
-    self.skView.showsFPS = YES;
-    self.skView.showsNodeCount = YES;
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {

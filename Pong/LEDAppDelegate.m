@@ -38,8 +38,4 @@
     [self.currentScene pauseGame];
 }
 
-- (void)applicationWillBecomeActive:(NSNotification*)notification {
-    [self.currentScene unpauseGame];
-}
-
 @end

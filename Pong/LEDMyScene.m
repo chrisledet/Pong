@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong) SKAction *fadeOutAction;
 @property (nonatomic, strong) SKAction *fadeInAction;
+@property (nonatomic, strong) SKAction *soundEffectAction;
 
 @property (nonatomic, assign) BOOL gamePaused;
 @property (nonatomic, assign) BOOL gameStarted;
@@ -97,6 +98,8 @@
 
         self.gameStarted = NO;
         self.gamePaused = NO;
+
+        self.soundEffectAction = [SKAction playSoundFileNamed:@"beep.wav" waitForCompletion:NO];
     }
 
     return self;
@@ -295,6 +298,8 @@
 
         self.bounceLeft = !self.bounceLeft;
         self.ballVelocityModifier = tanf([self randomAngle]);
+
+        [self runAction:self.soundEffectAction];
     }
 }
 

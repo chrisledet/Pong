@@ -20,6 +20,8 @@
 		837D7C0B18AB151C004E0793 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 837D7BE418AB151C004E0793 /* Cocoa.framework */; };
 		837D7C1318AB151C004E0793 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 837D7C1118AB151C004E0793 /* InfoPlist.strings */; };
 		837D7C1518AB151C004E0793 /* PongTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 837D7C1418AB151C004E0793 /* PongTests.m */; };
+		83861E7318B328F200ACE441 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 83861E7218B328F200ACE441 /* beep.wav */; };
+		83861E7418B328F200ACE441 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 83861E7218B328F200ACE441 /* beep.wav */; };
 		83CD9F0B18AEF934004DCD3A /* Ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0818AEF934004DCD3A /* Ball.png */; };
 		83CD9F0C18AEF934004DCD3A /* Ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0818AEF934004DCD3A /* Ball.png */; };
 		83CD9F0D18AEF934004DCD3A /* Ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD9F0918AEF934004DCD3A /* Ball@2x.png */; };
@@ -61,6 +63,7 @@
 		837D7C1018AB151C004E0793 /* PongTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PongTests-Info.plist"; sourceTree = "<group>"; };
 		837D7C1218AB151C004E0793 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		837D7C1418AB151C004E0793 /* PongTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PongTests.m; sourceTree = "<group>"; };
+		83861E7218B328F200ACE441 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		83CD9F0818AEF934004DCD3A /* Ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ball.png; sourceTree = "<group>"; };
 		83CD9F0918AEF934004DCD3A /* Ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Ball@2x.png"; sourceTree = "<group>"; };
 		83CD9F1218AFDDF7004DCD3A /* LEDPaddle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LEDPaddle.h; path = Classes/LEDPaddle.h; sourceTree = "<group>"; };
@@ -179,6 +182,7 @@
 		83CD9F0718AEF934004DCD3A /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				83861E7218B328F200ACE441 /* beep.wav */,
 				83CD9F0818AEF934004DCD3A /* Ball.png */,
 				83CD9F0918AEF934004DCD3A /* Ball@2x.png */,
 			);
@@ -275,6 +279,7 @@
 				83CD9F0D18AEF934004DCD3A /* Ball@2x.png in Resources */,
 				837D7BF118AB151C004E0793 /* InfoPlist.strings in Resources */,
 				83CD9F0B18AEF934004DCD3A /* Ball.png in Resources */,
+				83861E7318B328F200ACE441 /* beep.wav in Resources */,
 				837D7BF718AB151C004E0793 /* Credits.rtf in Resources */,
 				837D7BF918AB151C004E0793 /* MainMenu.xib in Resources */,
 			);
@@ -284,6 +289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83861E7418B328F200ACE441 /* beep.wav in Resources */,
 				83CD9F0C18AEF934004DCD3A /* Ball.png in Resources */,
 				83CD9F0E18AEF934004DCD3A /* Ball@2x.png in Resources */,
 				837D7C1318AB151C004E0793 /* InfoPlist.strings in Resources */,

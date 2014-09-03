@@ -100,6 +100,16 @@
         self.gamePaused = NO;
 
         self.soundEffectAction = [SKAction playSoundFileNamed:@"beep.wav" waitForCompletion:NO];
+
+        // Draw dotted line in middle
+        CGMutablePathRef midPath = CGPathCreateMutable();
+        CGPathMoveToPoint(midPath, NULL, CGRectGetMidX(self.frame), CGRectGetMaxY(self.frame));
+        CGPathAddLineToPoint(midPath, NULL, CGRectGetMidX(self.frame), CGRectGetMinY(self.frame));
+
+        SKShapeNode *dottedLine = [SKShapeNode node];
+        dottedLine.path = midPath;
+        dottedLine.strokeColor = [SKColor whiteColor];
+        [self addChild:dottedLine];
     }
 
     return self;

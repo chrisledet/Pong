@@ -1,6 +1,9 @@
 ## Pong
 
-Pong clone written in SpriteKit framework for OS X
+Pong written in SpriteKit framework for OS X
+
+![screenshot](https://raw.githubusercontent.com/chrisledet/Pong/master/Screen%20Shot.png)
+
 
 ### Download
 

@@ -110,6 +110,8 @@
         dottedLine.path = midPath;
         dottedLine.strokeColor = [SKColor whiteColor];
         [self addChild:dottedLine];
+
+        CGPathRelease(midPath);
     }
 
     return self;

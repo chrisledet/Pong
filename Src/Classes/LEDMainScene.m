@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Chris Ledet. All rights reserved.
 //
 
-#import "LEDMyScene.h"
+#import "LEDMainScene.h"
 
-@interface LEDMyScene()
+@interface LEDMainScene()
 
 @property (nonatomic, strong) LEDPaddle *cpuPaddle;
 @property (nonatomic, strong) LEDPaddle *playerPaddle;
@@ -45,7 +45,7 @@
 
 @end
 
-@implementation LEDMyScene
+@implementation LEDMainScene
 
 #pragma mark - Initializers
 

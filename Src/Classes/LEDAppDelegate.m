@@ -7,11 +7,11 @@
 //
 
 #import "LEDAppDelegate.h"
-#import "LEDMyScene.h"
+#import "LEDMainScene.h"
 
 @interface LEDAppDelegate()
 
-@property (nonatomic, strong) LEDMyScene *currentScene;
+@property (nonatomic, strong) LEDMainScene *currentScene;
 
 @end
 
@@ -22,7 +22,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     /* Pick a size for the scene */
-    self.currentScene = [LEDMyScene sceneWithSize:CGSizeMake(1024, 768)];
+    self.currentScene = [LEDMainScene sceneWithSize:CGSizeMake(1024, 768)];
 
     /* Set the scale mode to scale to fit the window */
     self.currentScene.scaleMode = SKSceneScaleModeAspectFit;

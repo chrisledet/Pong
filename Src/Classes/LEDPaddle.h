@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Chris Ledet. All rights reserved.
 //
 
-#import <SpriteKit/SpriteKit.h>
 #import "LEDMacros.h"
 
 @interface LEDPaddle : SKSpriteNode

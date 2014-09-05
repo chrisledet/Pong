@@ -35,8 +35,8 @@
 @property (nonatomic, assign) CGFloat ballVelocityX;
 @property (nonatomic, assign) CGFloat ballVelocityY;
 @property (nonatomic, assign) CGFloat cpuPaddleVelocityY;
-@property (nonatomic, assign) CGFloat initialPlayerPositionX;
-@property (nonatomic, assign) CGFloat initialCpuPositionX;
+@property (nonatomic, assign) CGFloat fixedPositionXForPlayer;
+@property (nonatomic, assign) CGFloat fixedPositionXForCpuPlayer;
 @property (nonatomic, assign) CGFloat ballVelocityModifier;
 
 @property (nonatomic, assign) NSUInteger playerScore;
@@ -53,7 +53,7 @@
 
     if (self = [super initWithSize:size]) {
 
-        self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
+        self.backgroundColor = [SKColor colorWithRed:0.10 green:0.10 blue:0.10 alpha:1.0];
 
         self.fadeOutAction = [SKAction fadeOutWithDuration:0.75f];
         self.fadeInAction  = [SKAction fadeInWithDuration:0.75f];
@@ -71,11 +71,11 @@
         self.physicsWorld.contactDelegate = self;
         self.physicsWorld.gravity = CGVectorMake(0,0);
 
-        self.initialPlayerPositionX = (CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING;
+        self.fixedPositionXForPlayer = (CGRectGetMaxX(self.frame) - LED_PONG_PADDLE_SIZE.width/2) - LED_PONG_PADDING;
         self.playerPaddle = [[LEDPaddle alloc] initWithColor:[SKColor whiteColor] size:LED_PONG_PADDLE_SIZE];
         [self addChild:self.playerPaddle];
 
-        self.initialCpuPositionX = (CGRectGetMinX(self.frame) + LED_PONG_PADDLE_SIZE.width/2) + LED_PONG_PADDING;
+        self.fixedPositionXForCpuPlayer = (CGRectGetMinX(self.frame) + LED_PONG_PADDLE_SIZE.width/2) + LED_PONG_PADDING;
         self.cpuPaddle = [[LEDPaddle alloc] initWithColor:[SKColor whiteColor] size:LED_PONG_PADDLE_SIZE];
         [self addChild:self.cpuPaddle];
 
@@ -158,8 +158,8 @@
 
     self.ballVelocityModifier = tanf([self randomAngle]);
 
-    self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, CGRectGetMidY(self.frame));
-    self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX, CGRectGetMidY(self.frame));
+    self.playerPaddle.position = CGPointMake(self.fixedPositionXForPlayer, CGRectGetMidY(self.frame));
+    self.cpuPaddle.position    = CGPointMake(self.fixedPositionXForCpuPlayer, CGRectGetMidY(self.frame));
 
     [self resetPositions];
 }
@@ -228,30 +228,33 @@
 - (void)update:(CFTimeInterval)currentTime {
     /* Called before each frame is rendered */
 
-    if (!self.gameStarted)
+    if (!self.gameStarted) {
         [self startGame];
+    }
 
-    if (self.gamePaused)
+    if (self.gamePaused) {
         return;
-
-    // NOTICE: Just reset paddle's position.x when it collides with ball
-    self.playerPaddle.position = CGPointMake(self.initialPlayerPositionX, self.playerPaddle.position.y);
-    self.cpuPaddle.position    = CGPointMake(self.initialCpuPositionX, self.cpuPaddle.position.y);
+    }
 
     float speedBoost = (self.hitCounter * 0.20);
 
-    // Move Paddle but prevent them from going too high or low
+    /* Move Player's paddle but prevent them from going too high or low */
     if (self.moveUp && ![self reachedTop:self.playerPaddle]) {
         CGPoint currentPosition = self.playerPaddle.position;
-        self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y + LED_PONG_PADDLE_SPEED);
+        self.playerPaddle.position = CGPointMake(self.fixedPositionXForPlayer, currentPosition.y + LED_PONG_PADDLE_SPEED);
     } else if (self.moveDown && ![self reachedBottom:self.playerPaddle]) {
         CGPoint currentPosition = self.playerPaddle.position;
-        self.playerPaddle.position = CGPointMake(currentPosition.x, currentPosition.y - LED_PONG_PADDLE_SPEED);
+        self.playerPaddle.position = CGPointMake(self.fixedPositionXForPlayer, currentPosition.y - LED_PONG_PADDLE_SPEED);
     }
 
     // Move CPU Paddle
-    // FIXME: CPU Paddle cheats by passing bounds
     self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, self.ballVelocityY * LED_PONG_CPU_THROTTLE + speedBoost);
+    /* CPU Paddle should not go out of bounds */
+    if ([self reachedTop:self.cpuPaddle]) {
+        self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, CGRectGetMaxY(self.frame) - LED_PONG_PADDLE_PADDING);
+    } else if ([self reachedBottom:self.cpuPaddle]) {
+        self.cpuPaddle.position = CGPointMake(self.cpuPaddle.position.x, CGRectGetMinY(self.frame) + LED_PONG_PADDLE_PADDING);
+    }
 
     // Ball's next movement when it hits top or bottom
     if (self.ballVelocityY >= self.frame.size.height - self.ball.size.height/2) {
@@ -275,15 +278,17 @@
     float currentBallVelocityY = (LED_PONG_BALL_SPEED * self.ballVelocityModifier) + speedBoost;
     float speedDifference = (LED_PONG_BALL_SPEED - currentBallVelocityY) + speedBoost;
 
-    if (self.bounceUp)
+    if (self.bounceUp) {
         self.ballVelocityY += currentBallVelocityY;
-    else
+    } else {
         self.ballVelocityY -= currentBallVelocityY;
+    }
 
-    if (self.bounceLeft)
+    if (self.bounceLeft) {
         self.ballVelocityX -= (LED_PONG_BALL_SPEED + speedDifference);
-    else
+    } else {
         self.ballVelocityX += (LED_PONG_BALL_SPEED + speedDifference);
+    }
 
     self.ball.position = CGPointMake(self.ballVelocityX, self.ballVelocityY);
 }

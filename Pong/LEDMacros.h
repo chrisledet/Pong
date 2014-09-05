@@ -19,6 +19,8 @@
 
 #define LED_PONG_BALL_SPEED     7.5f
 
+#define LED_PONG_PADDLE_PADDING LED_PONG_PADDLE_SIZE.height/2
+
 static const uint32_t kLEDEdgeCategory   =  0x1 << 0;
 static const uint32_t kLEDPaddleCategory =  0x1 << 1;
 static const uint32_t kLEDBallCategory   =  0x1 << 2;
